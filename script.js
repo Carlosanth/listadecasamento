@@ -100,8 +100,22 @@
 
               <div class="acoes">
                 ${produto.disponivel 
-                  ? `<button class="botao primario botao-pix" data-id="${id}" data-pix="${produto.pix}" data-titulo="${produto.titulo}">PIX</button>
-                     <a class="botao botao-cartao" href="${produto.linkCartao}" data-id="${id}" data-titulo="${produto.titulo}">Cartão</a>`
+                  ? `<button class="botao primario botao-pix" 
+                              data-id="${id}" 
+                              data-pix="${produto.pix}" 
+                              data-titulo="${produto.titulo}">
+                        <img src="Pix-96.png" 
+                            alt="Pix" class="icone-pix">
+                        <span class="texto-pix">Pix</span>
+                    </button>
+                    <a class="botao botao-cartao" 
+                        href="${produto.linkCartao}" 
+                        data-id="${id}" 
+                        data-titulo="${produto.titulo}">
+                        <img src="Card_128.png" 
+                            alt="Cartão" class="icone-cartao">
+                        <span class="texto-cartao">Cartão</span>
+                    </a>`
                   : `<button class="botao" disabled style="background-color: #ccc; cursor: not-allowed;">Ganhamos!</button>`
                 }
               </div>
