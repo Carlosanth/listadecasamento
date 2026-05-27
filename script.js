@@ -71,7 +71,7 @@
       const mainConteudo = document.createElement('main');
       mainConteudo.className = 'conteudo';
       
-      // Se já estiver indisponível, podemos adicionar uma classe para mudar o visual via CSS se quiser
+      // Se já estiver indisponível, adiciona a classe para o CSS aplicar o efeito cinza
       if (!produto.disponivel) {
         mainConteudo.classList.add('item-esgotado');
       }
@@ -95,7 +95,7 @@
               ${produto.disponivel 
                 ? `<button class="botao primario botao-pix" data-id="${id}" data-pix="${produto.pix}" data-titulo="${produto.titulo}">PIX</button>
                    <a class="botao botao-cartao" href="${produto.linkCartao}" data-id="${id}" data-titulo="${produto.titulo}" target="_blank" rel="noopener noreferrer">Cartão</a>`
-                : `<button class="botao" disabled style="background-color: #ccc; cursor: not-allowed;">Esgotado</button>`
+                : `<button class="botao" disabled style="background-color: #ccc; cursor: not-allowed;">Ganhamos</button>`
               }
             </div>
           </div>
@@ -124,17 +124,27 @@
       });
     });
 
-    // EVENTO DO BOTÃO CARTÃO
+    // EVENTO DO BOTÃO CARTÃO (COM CONFIRMAÇÃO)
     document.querySelectorAll('.botao-cartao').forEach(link => {
       link.addEventListener('click', function(e) {
+        // 1. Previne o link de abrir sozinho antes da resposta
+        e.preventDefault(); 
+
         const id = this.dataset.id;
         const titulo = this.dataset.titulo;
+        const urlUrl = this.href; // Pega o link da InfinitePay
 
-        // Como o cartão abre outra página, marcamos como indisponível na hora do clique
-        marcarComoIndisponivel(id, titulo);
+        // 2. Abre a janelinha perguntando se a pessoa confirma
+        if (confirm(`Você deseja escolher o presente "${titulo}" e pagar com Cartão? Se sim, vamos te redirecionar para o pagamento e marcar o item como Indisponível.`)) {
+          
+          // Se ela disser SIM: Marca como indisponível no Firebase
+          marcarComoIndisponivel(id, titulo);
+
+          // Abre o link da InfinitePay em uma nova aba
+          window.open(urlUrl, '_blank', 'noopener,noreferrer');
+        }
       });
     });
 
   });
-
 })();
