@@ -1,132 +1,151 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
-*{box-sizing:border-box} 
-html,body{height:100%} 
+* {
+  box-sizing: border-box;
+} 
 
-body{
-  font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+html, body {
+  height: 100%;
+} 
+
+body {
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
   background: #f6f7fb;
-  padding:40px;
+  padding: 40px;
   margin: 0;
 }
 
-/* NOVO: Essa div agora é quem alinha os cartões lado a lado perfeitamente */
+/* CONTAINER DOS PRODUTOS (ALINHAMENTO) */
 #lista-produtos {
-  display:flex;
-  flex-wrap:wrap;
+  display: flex;
+  flex-wrap: wrap;
   gap: 20px;
-  align-items:center;
-  justify-content:center;
+  align-items: center;
+  justify-content: center;
   width: 100%;
 }
 
-.conteudo{width:380px} 
-
-.cartao-produto{
-  background:#fff;
-  border-radius:18px;
-  box-shadow:0 14px 30px rgba(0,0,0,0.12);
-  padding:18px;
-  overflow:hidden;
-  transition: all 0.3s ease; /* Efeito suave quando mudar de status */
+.conteudo {
+  width: 380px;
 } 
 
-.imagem-produto{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:8px 6px 14px;
-} 
-.imagem-produto img{
-  width:100%;
-  height:auto;
-  border-radius:12px;
-  object-fit:cover;
+/* CARTÃO DO PRODUTO */
+.cartao-produto {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 14px 30px rgba(0,0,0,0.12);
+  padding: 18px;
+  overflow: hidden;
+  transition: all 0.3s ease;
 } 
 
-.rodape-produto{
-  display:flex;
-  gap:12px;
-  align-items:center;
-  margin-top:10px;
+.imagem-produto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 6px 14px;
 } 
 
-.caixa-preco{
-  background:#f8f9fb;
-  padding:12px 14px;
-  border-radius:10px;
-  flex:1 1 0;
-} 
-.rotulo-preco{
-  font-size:14px;
-  color:#333;
-  font-weight:600;
-} 
-.preco{
-  margin-top:4px;
-  font-size:18px;
-  font-weight:700;
-  color:#111;
+.imagem-produto img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
 } 
 
-/* Mantém o verde para o Disponível */
-.disponibilidade.disponivel{
-  margin-top:6px;
-  color:#13a44e;
-  font-weight:700;
+.titulo-produto {
+  text-align: center;
+  margin: 18px 0 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111;
 } 
 
-/* NOVO: Muda o texto para vermelho se estiver Indisponível */
-.disponibilidade.indisponivel{
-  margin-top:6px;
-  color:#d93025;
-  font-weight:700;
+.rodape-produto {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 10px;
+} 
+
+.caixa-preco {
+  background: #f8f9fb;
+  padding: 12px 14px;
+  border-radius: 10px;
+  flex: 1 1 0;
+} 
+
+.rotulo-preco {
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+} 
+
+.preco {
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+} 
+
+/* STATUS DE DISPONIBILIDADE */
+.disponibilidade.disponivel {
+  margin-top: 6px;
+  color: #13a44e;
+  font-weight: 700;
+} 
+
+.disponibilidade.indisponivel {
+  margin-top: 6px;
+  color: #d93025;
+  font-weight: 700;
 }
 
-/* NOVO: Deixa o cartão cinzento e a imagem apagadinha quando o item for comprado */
+/* ESTILO PARA QUANDO O ITEM FOR COMPRADO */
 .item-esgotado .cartao-produto {
   background: #fcfcfc;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
+
 .item-esgotado .imagem-produto img {
   filter: grayscale(1) opacity(0.6);
 }
 
-.titulo-produto{
-  text-align:center;
-  margin:18px 0 0;
-  font-size:1.05rem;
-  font-weight:700;
+/* BOTÕES E AÇÕES */
+.acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 110px;
 } 
 
-.acoes{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  width:110px;
+.botao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e2e6ef;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #222;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.1s;
 } 
-.botao{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  background:#fff;
-  border:1px solid #e2e6ef;
-  padding:10px 12px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:700;
-  color:#222;
-  text-decoration:none;
-} 
-.botao.primario{
-  background:#fff;
-  border-color:#e8f5ee;
-  color:#0b8a4b;
-} 
-.botao:active{transform:translateY(1px)} 
 
-/* Estilo para as mensagens flutuantes (Toast) que o script usa */
+.botao.primario {
+  background: #fff;
+  border-color: #e8f5ee;
+  color: #0b8a4b;
+} 
+
+.botao:active {
+  transform: translateY(1px);
+} 
+
+/* MENSAGENS FLUTUANTES (TOAST) */
 .toast {
   position: fixed;
   bottom: 20px;
@@ -141,16 +160,12 @@ body{
   z-index: 9999;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
+
 .toast.show {
   transform: translateX(-50%) translateY(0);
 }
 
-@media (max-width:420px){
-  .conteudo{width:92%} 
-  body { padding: 20px 10px; }
-}
-
-/* ESTILOS DA JANELINHA MODAL */
+/* ESTILOS DA JANELINHA MODAL (PEDIR NOME) */
 .modal-container {
   position: fixed;
   top: 0;
@@ -158,7 +173,7 @@ body{
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.6);
-  display: flex;
+  display: none; /* Começa oculto para o JS controlar */
   align-items: center;
   justify-content: center;
   z-index: 10000;
@@ -167,7 +182,9 @@ body{
   transition: opacity 0.3s ease;
 }
 
+/* Classe ativada pelo JS para exibir o modal suavemente */
 .modal-container.mostrar {
+  display: flex !important;
   opacity: 1;
   pointer-events: auto;
 }
@@ -213,4 +230,14 @@ body{
 .modal-botoes {
   display: flex;
   gap: 12px;
+}
+
+/* RESPONSIVIDADE PARA CELULARES */
+@media (max-width:420px) {
+  .conteudo {
+    width: 92%;
+  } 
+  body { 
+    padding: 20px 10px; 
+  }
 }
