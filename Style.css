@@ -55,7 +55,8 @@ body {
 
 .titulo-produto {
   text-align: center;
-  margin: 18px 0 0;
+  margin: 1px 0 0;
+  height: 30px;
   font-size: 1.05rem;
   font-weight: 700;
   color: #111;
@@ -69,10 +70,17 @@ body {
 } 
 
 .caixa-preco {
-  background: #f8f9fb;
   padding: 12px 14px;
   border-radius: 10px;
   flex: 1 1 0;
+  position: relative;
+  border: 3px solid transparent;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-image: url('Estilo para cartao de valor.png');
+  background-size: 200% 900%;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+
 } 
 
 .rotulo-preco {
@@ -91,8 +99,9 @@ body {
 /* STATUS DE DISPONIBILIDADE */
 .disponibilidade.disponivel {
   margin-top: 6px;
-  color: #13a44e;
-  font-weight: 700;
+  color: #615701;
+  font-weight: 1000;
+  font-variant-emoji: emoji;
 } 
 
 .disponibilidade.indisponivel {
@@ -116,7 +125,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 110px;
+  width: 130px;
 } 
 
 .botao {
@@ -124,21 +133,24 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  background: #fff;
+  background: #fdf79950;
   border: 1px solid #e2e6ef;
   padding: 10px 12px;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 600;
   color: #222;
   text-decoration: none;
   transition: background 0.2s, transform 0.1s;
+  box-shadow: #55555536 0px 1px 15px;
 } 
 
 .botao.primario {
-  background: #fff;
-  border-color: #e8f5ee;
-  color: #0b8a4b;
+  background: #fdf79950;
+  font-weight: 700;
+  border-color: #f5f5e8;
+  color: #222;
+  box-shadow: #55555536 0px 1px 15px;
 } 
 
 .botao:active {
@@ -240,4 +252,16 @@ body {
   body { 
     padding: 20px 10px; 
   }
+}
+
+.icone-pix, .icone-cartao {
+  width: 22px;
+  height: 22px;
+}
+
+.texto-pix, .texto-cartao {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+  margin-left: 6px; /* espaço entre ícone e texto */
 }
