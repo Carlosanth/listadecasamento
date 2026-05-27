@@ -31,7 +31,7 @@
     }
   }
 
-  async function marcarComoIndisponivel(idProduto, nomeProduto) {
+  async function marcarComoIndisponivel(idProduto) {
     try {
       await db.collection("produtos").doc(idProduto).update({
         disponivel: false
@@ -47,7 +47,7 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          mensagem: `Olá Alex! O(a) convidado(a) ${nomeConvidado} escolheu o presente: ${nomeProduto} (Pago via ${formaPagamento.toUpperCase()}) na sua lista de casamento.`
+          mensagem: `Olá Carlos! O(a) convidado(a) ${nomeConvidado} escolheu o presente: ${nomeProduto} (Pago via ${formaPagamento.toUpperCase()}) na sua lista de casamento.`
         })
       });
     } catch (error) {
@@ -55,120 +55,144 @@
     }
   }
 
-  const listaContainer = document.getElementById('lista-produtos');
-  const modal = document.getElementById('modal-nome');
-  const inputNome = document.getElementById('nome-convidado');
+  // Rodar apenas quando a página estiver totalmente carregada
+  window.addEventListener('DOMContentLoaded', () => {
+    const listaContainer = document.getElementById('lista-produtos');
+    const modal = document.getElementById('modal-nome');
+    const inputNome = document.getElementById('nome-convidado');
 
-  db.collection("produtos").onSnapshot((snapshot) => {
-    listaContainer.innerHTML = "";
+    if (!listaContainer) {
+      alert("Erro crítico: Não encontrei a div 'lista-produtos' no seu HTML!");
+      return;
+    }
 
-    snapshot.forEach((doc) => {
-      const produto = doc.data();
-      const id = doc.id;
+    db.collection("produtos").onSnapshot((snapshot) => {
+      listaContainer.innerHTML = "";
 
-      const textoDisponibilidade = produto.disponivel ? "Disponível" : "Indisponível";
-      const classeDisponibilidade = produto.disponivel ? "disponivel" : "indisponivel";
-      
-      const mainConteudo = document.createElement('main');
-      mainConteudo.className = 'conteudo';
-      
-      if (!produto.disponivel) {
-        mainConteudo.classList.add('item-esgotado');
-      }
+      snapshot.forEach((doc) => {
+        const produto = doc.data();
+        const id = doc.id;
 
-      mainConteudo.innerHTML = `
-        <section class="cartao-produto">
-          <div class="imagem-produto">
-            <img src="${produto.imagem}" alt="${produto.titulo}" />
-          </div>
-
-          <div class="titulo-produto">${produto.titulo}</div>
-
-          <div class="rodape-produto">
-            <div class="caixa-preco">
-              <div class="rotulo-preco">Valor:</div>
-              <div class="preco">${produto.preco}</div>
-              <div class="disponibilidade ${classeDisponibilidade}">${textoDisponibilidade}</div>
-            </div>
-
-            <div class="acoes">
-              ${produto.disponivel 
-                ? `<button class="botao primario botao-pix" data-id="${id}" data-pix="${produto.pix}" data-titulo="${produto.titulo}">PIX</button>
-                   <a class="botao botao-cartao" href="${produto.linkCartao}" data-id="${id}" data-titulo="${produto.titulo}">Cartão</a>`
-                : `<button class="botao" disabled style="background-color: #ccc; cursor: not-allowed;">Ganhamos!</button>`
-              }
-            </div>
-          </div>
-        </section>
-      `;
-
-      listaContainer.appendChild(mainConteudo);
-    });
-
-    // EVENTO DO PIX
-    document.querySelectorAll('.botao-pix').forEach(botao => {
-      botao.addEventListener('click', function() {
-        produtoAtualId = this.dataset.id;
-        produtoAtualTitulo = this.dataset.titulo;
-        produtoAtualPix = this.dataset.pix;
-        formaPagamentoAtual = "pix";
-
-        if(modal) {
-          inputNome.value = "";
-          modal.classList.add('mostrar'); // Ativa a janela
-          inputNome.focus();
-        }
-      });
-    });
-
-    // EVENTO DO CARTÃO
-    document.querySelectorAll('.botao-cartao').forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault(); 
+        const textoDisponibilidade = produto.disponivel ? "Disponível" : "Indisponível";
+        const classeDisponibilidade = produto.disponivel ? "disponivel" : "indisponivel";
         
-        produtoAtualId = this.dataset.id;
-        produtoAtualTitulo = this.dataset.titulo;
-        produtoAtualLinkCartao = this.getAttribute('href'); 
-        formaPagamentoAtual = "cartao";
-
-        if(modal) {
-          inputNome.value = "";
-          modal.classList.add('mostrar'); // Ativa a janela
-          inputNome.focus();
+        const mainConteudo = document.createElement('main');
+        mainConteudo.className = 'conteudo';
+        
+        if (!produto.disponivel) {
+          mainConteudo.classList.add('item-esgotado');
         }
+
+        mainConteudo.innerHTML = `
+          <section class="cartao-produto">
+            <div class="imagem-produto">
+              <img src="${produto.imagem}" alt="${produto.titulo}" />
+            </div>
+
+            <div class="titulo-produto">${produto.titulo}</div>
+
+            <div class="rodape-produto">
+              <div class="caixa-preco">
+                <div class="rotulo-preco">Valor:</div>
+                <div class="preco">${produto.preco}</div>
+                <div class="disponibilidade ${classeDisponibilidade}">${textoDisponibilidade}</div>
+              </div>
+
+              <div class="acoes">
+                ${produto.disponivel 
+                  ? `<button class="botao primario botao-pix" data-id="${id}" data-pix="${produto.pix}" data-titulo="${produto.titulo}">PIX</button>
+                     <a class="botao botao-cartao" href="${produto.linkCartao}" data-id="${id}" data-titulo="${produto.titulo}">Cartão</a>`
+                  : `<button class="botao" disabled style="background-color: #ccc; cursor: not-allowed;">Ganhamos!</button>`
+                }
+              </div>
+            </div>
+          </section>
+        `;
+
+        listaContainer.appendChild(mainConteudo);
+      });
+
+      // EVENTO DO PIX
+      document.querySelectorAll('.botao-pix').forEach(botao => {
+        botao.addEventListener('click', function() {
+          produtoAtualId = this.dataset.id;
+          produtoAtualTitulo = this.dataset.titulo;
+          produtoAtualPix = this.dataset.pix;
+          formaPagamentoAtual = "pix";
+
+          const m = document.getElementById('modal-nome');
+          if(m) {
+            if(inputNome) inputNome.value = "";
+            m.classList.add('mostrar');
+            if(inputNome) inputNome.focus();
+          } else {
+            // Se o CSS ou HTML falharem, o JS usa o prompt do próprio navegador como plano B
+            const nomeBackup = prompt("Digite seu nome completo para reservar o PIX:");
+            if(nomeBackup) finalizarCompra(nomeBackup);
+          }
+        });
+      });
+
+      // EVENTO DO CARTÃO
+      document.querySelectorAll('.botao-cartao').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault(); 
+          
+          produtoAtualId = this.dataset.id;
+          produtoAtualTitulo = this.dataset.titulo;
+          produtoAtualLinkCartao = this.getAttribute('href'); 
+          formaPagamentoAtual = "cartao";
+
+          const m = document.getElementById('modal-nome');
+          if(m) {
+            if(inputNome) inputNome.value = "";
+            m.classList.add('mostrar');
+            if(inputNome) inputNome.focus();
+          } else {
+            const nomeBackup = prompt("Digite seu nome completo para pagar com Cartão:");
+            if(nomeBackup) finalizarCompra(nomeBackup);
+          }
+        });
       });
     });
-  });
 
-  // BOTÕES DO MODAL
-  if(document.getElementById('btn-cancelar-modal')) {
-    document.getElementById('btn-cancelar-modal').addEventListener('click', () => {
-      if(modal) modal.classList.remove('mostrar');
-    });
-  }
+    // BOTÕES DO MODAL (CANCELAR)
+    const btnCancelar = document.getElementById('btn-cancelar-modal');
+    if(btnCancelar) {
+      btnCancelar.addEventListener('click', () => {
+        const m = document.getElementById('modal-nome');
+        if(m) m.classList.remove('mostrar');
+      });
+    }
 
-  if(document.getElementById('btn-confirmar-modal')) {
-    document.getElementById('btn-confirmar-modal').addEventListener('click', async () => {
-      const nome = inputNome.value.trim();
-      
-      if (nome === "") {
-        alert("Por favor, digite o seu nome para continuar.");
-        return;
-      }
+    // BOTÕES DO MODAL (CONFIRMAR)
+    const btnConfirmar = document.getElementById('btn-confirmar-modal');
+    if(btnConfirmar) {
+      btnConfirmar.addEventListener('click', async () => {
+        const nome = inputNome ? inputNome.value.trim() : "";
+        if (nome === "") {
+          alert("Por favor, digite o seu nome para continuar.");
+          return;
+        }
+        const m = document.getElementById('modal-nome');
+        if(m) m.classList.remove('mostrar');
+        
+        await finalizarCompra(nome);
+      });
+    }
 
-      if(modal) modal.classList.remove('mostrar');
-
-      enviarEmailNotificacao(nome, produtoAtualTitulo, formaPagamentoAtual);
-      await marcarComoIndisponivel(produtoAtualId, produtoAtualTitulo);
+    // Função central para terminar o processo
+    async function finalizarCompra(nomeConvidado) {
+      enviarEmailNotificacao(nomeConvidado, produtoAtualTitulo, formaPagamentoAtual);
+      await marcarComoIndisponivel(produtoAtualId);
 
       if (formaPagamentoAtual === "pix") {
         await copiarPix(produtoAtualPix);
-        alert(`Obrigado, ${nome}! O presente "${produtoAtualTitulo}" foi reservado para você. A chave PIX já foi copiada automaticamente, basta colar no aplicativo do seu banco para pagar.`);
+        alert(`Obrigado, ${nomeConvidado}! O presente "${produtoAtualTitulo}" foi reservado para você. A chave PIX já foi copiada automaticamente, basta colar no aplicativo do seu banco para pagar.`);
       } else if (formaPagamentoAtual === "cartao") {
-        alert(`Obrigado, ${nome}! O presente "${produtoAtualTitulo}" foi reservado. Clique em OK para ser redirecionado à página de pagamento seguro com cartão.`);
+        alert(`Obrigado, ${nomeConvidado}! O presente "${produtoAtualTitulo}" foi reservado. Clique em OK para ser redirecionado à página de pagamento seguro com cartão.`);
         window.open(produtoAtualLinkCartao, '_blank', 'noopener,noreferrer');
       }
-    });
-  }
-
+    }
+  });
 })();
