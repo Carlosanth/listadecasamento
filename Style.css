@@ -1,19 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
-*{box-sizing:border-box} /* define box-sizing padrão para todos os elementos */
-html,body{height:100%} /* garante altura total da página para body/html */
+*{box-sizing:border-box} 
+html,body{height:100%} 
+
 body{
   font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
   background: #f6f7fb;
+  padding:40px;
+  margin: 0;
+}
+
+/* NOVO: Essa div agora é quem alinha os cartões lado a lado perfeitamente */
+#lista-produtos {
   display:flex;
   flex-wrap:wrap;
   gap: 20px;
   align-items:center;
   justify-content:center;
-  padding:40px;
+  width: 100%;
 }
 
-.conteudo{width:380px} /* largura do container principal do cartão */
+.conteudo{width:380px} 
 
 .cartao-produto{
   background:#fff;
@@ -21,64 +28,83 @@ body{
   box-shadow:0 14px 30px rgba(0,0,0,0.12);
   padding:18px;
   overflow:hidden;
-} /* estilo do cartão do produto com bordas e sombra */
+  transition: all 0.3s ease; /* Efeito suave quando mudar de status */
+} 
 
 .imagem-produto{
   display:flex;
   align-items:center;
   justify-content:center;
   padding:8px 6px 14px;
-} /* container da imagem centralizada */
+} 
 .imagem-produto img{
   width:100%;
   height:auto;
   border-radius:12px;
   object-fit:cover;
-} /* imagem do produto responsiva e encaixada */
+} 
 
 .rodape-produto{
   display:flex;
   gap:12px;
   align-items:center;
   margin-top:10px;
-} /* rodapé do cartão que alinha preço e botões */
+} 
 
 .caixa-preco{
   background:#f8f9fb;
   padding:12px 14px;
   border-radius:10px;
   flex:1 1 0;
-} /* bloco de texto do preço */
+} 
 .rotulo-preco{
   font-size:14px;
   color:#333;
   font-weight:600;
-} /* rótulo "Preço" ou texto explicativo */
+} 
 .preco{
   margin-top:4px;
   font-size:18px;
   font-weight:700;
   color:#111;
-} /* valor final exibido em destaque */
-.disponibilidade{
+} 
+
+/* Mantém o verde para o Disponível */
+.disponibilidade.disponivel{
   margin-top:6px;
   color:#13a44e;
   font-weight:700;
-} /* texto de disponibilidade do produto */
+} 
+
+/* NOVO: Muda o texto para vermelho se estiver Indisponível */
+.disponibilidade.indisponivel{
+  margin-top:6px;
+  color:#d93025;
+  font-weight:700;
+}
+
+/* NOVO: Deixa o cartão cinzento e a imagem apagadinha quando o item for comprado */
+.item-esgotado .cartao-produto {
+  background: #fcfcfc;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.item-esgotado .imagem-produto img {
+  filter: grayscale(1) opacity(0.6);
+}
 
 .titulo-produto{
   text-align:center;
   margin:18px 0 0;
   font-size:1.05rem;
   font-weight:700;
-} /* título do produto exibido abaixo da imagem */
+} 
 
 .acoes{
   display:flex;
   flex-direction:column;
   gap:10px;
   width:110px;
-} /* área dos botões de ação */
+} 
 .botao{
   display:flex;
   align-items:center;
@@ -92,14 +118,34 @@ body{
   font-weight:700;
   color:#222;
   text-decoration:none;
-} /* estilo base dos botões */
+} 
 .botao.primario{
   background:#fff;
   border-color:#e8f5ee;
   color:#0b8a4b;
-} /* variação de botão principal */
-.botao:active{transform:translateY(1px)} /* efeito de clique no botão */
+} 
+.botao:active{transform:translateY(1px)} 
+
+/* Estilo para as mensagens flutuantes (Toast) que o script usa */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #333;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: transform 0.3s ease;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
 
 @media (max-width:420px){
-  .conteudo{width:92%} /* ajusta largura em telas pequenas */
+  .conteudo{width:92%} 
+  body { padding: 20px 10px; }
 }
