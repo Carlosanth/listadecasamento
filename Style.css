@@ -11,22 +11,28 @@ html, body {
 body {
   font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
   background: #f6f7fb;
-  padding: 40px;
+  padding: 0; /* Zerado para a imagem de boas-vindas cobrir tudo */
   margin: 0;
 }
 
-/* CONTAINER DOS PRODUTOS (ALINHAMENTO) */
+/* CONTAINER QUE ENVOLVE A LISTA E MANTÉM O ESPAÇAMENTO EXTERNO */
+.wrapper-produtos {
+  padding: 40px;
+}
+
+/* CONTAINER DOS PRODUTOS (LAYOUT EM DUAS COLUNAS NO CELULAR) */
 #lista-produtos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  /* Cria colunas automáticas de no mínimo 160px para caberem duas lado a lado no celular */
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+  gap: 16px;
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .conteudo {
-  width: 380px;
+  width: 100%; /* Deixa o Grid controlar a largura do cartão */
 } 
 
 /* CARTÃO DO PRODUTO */
@@ -34,45 +40,59 @@ body {
   background: #fff;
   border-radius: 18px;
   box-shadow: 0 14px 30px rgba(0,0,0,0.12);
-  padding: 18px;
+  padding: 14px;
   overflow: hidden;
   transition: all 0.3s ease;
+  height: 100%; /* Deixa todos os cartões com altura alinhada na mesma linha */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 } 
 
+/* CONTAINER DA IMAGEM COM TAMANHO FIXO PADRÃO */
 .imagem-produto {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 8px 6px 14px;
+  height: 180px; /* Altura fixa ideal para o formato de duas colunas */
+  width: 100%;
+  background: #fff;
+  overflow: hidden;
 } 
 
 .imagem-produto img {
   width: 100%;
-  height: auto;
+  height: 100%;
   border-radius: 12px;
-  object-fit: cover;
+  object-fit: contain; /* Ajusta a foto perfeitamente sem distorcer ou esticar */
 } 
 
 .titulo-produto {
   text-align: center;
-  margin: 1px 0 0;
-  height: 30px;
-  font-size: 1.05rem;
+  margin: 8px 0;
+  height: auto;
+  font-size: 1rem;
   font-weight: 700;
   color: #111;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limita o título em até 2 linhas para manter o padrão */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 } 
 
+/* RODAPÉ DO CARTÃO (EMPILHADO EM COLUNAS PARA SE ADAPTAR A TELAS MENORES) */
 .rodape-produto {
   display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-top: 10px;
+  flex-direction: column; 
+  gap: 10px;
+  margin-top: auto; /* Garante que o rodapé fique sempre colado na base */
 } 
 
 .caixa-preco {
-  padding: 12px 14px;
+  padding: 10px 12px;
   border-radius: 10px;
-  flex: 1 1 0;
+  width: 100%;
   position: relative;
   border: 3px solid transparent;
   background-origin: border-box;
@@ -80,37 +100,38 @@ body {
   background-image: url('Estilo para cartao de valor.png');
   background-size: 200% 900%;
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
-
 } 
 
 .rotulo-preco {
-  font-size: 14px;
+  font-size: 13px;
   color: #333;
   font-weight: 600;
 } 
 
 .preco {
   margin-top: 4px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #111;
 } 
 
 /* STATUS DE DISPONIBILIDADE */
 .disponibilidade.disponivel {
-  margin-top: 6px;
+  margin-top: 4px;
   color: #615701;
-  font-weight: 1000;
+  font-weight: 900;
+  font-size: 14px;
   font-variant-emoji: emoji;
 } 
 
 .disponibilidade.indisponivel {
-  margin-top: 6px;
+  margin-top: 4px;
   color: #d93025;
   font-weight: 700;
+  font-size: 14px;
 }
 
-/* ESTILO PARA QUANDO O ITEM FOR COMPRADO */
+/* ESTILO PARA ITEM ESGOTADO */
 .item-esgotado .cartao-produto {
   background: #fcfcfc;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -124,8 +145,8 @@ body {
 .acoes {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: 130px;
+  gap: 8px;
+  width: 100%;
 } 
 
 .botao {
@@ -143,6 +164,7 @@ body {
   text-decoration: none;
   transition: background 0.2s, transform 0.1s;
   box-shadow: #55555536 0px 1px 15px;
+  font-size: 14px;
 } 
 
 .botao.primario {
@@ -150,14 +172,13 @@ body {
   font-weight: 700;
   border-color: #f5f5e8;
   color: #222;
-  box-shadow: #55555536 0px 1px 15px;
 } 
 
 .botao:active {
   transform: translateY(1px);
 } 
 
-/* MENSAGENS FLUTUANTES (TOAST) */
+/* TOAST (MENSAGENS FLUTUANTES) */
 .toast {
   position: fixed;
   bottom: 20px;
@@ -177,7 +198,7 @@ body {
   transform: translateX(-50%) translateY(0);
 }
 
-/* ESTILOS DA JANELINHA MODAL (PEDIR NOME) */
+/* MODAL (JANELA FLUTUANTE) */
 .modal-container {
   position: fixed;
   top: 0;
@@ -185,7 +206,7 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.6);
-  display: none; /* Começa oculto para o JS controlar */
+  display: none;
   align-items: center;
   justify-content: center;
   z-index: 10000;
@@ -194,7 +215,6 @@ body {
   transition: opacity 0.3s ease;
 }
 
-/* Classe ativada pelo JS para exibir o modal suavemente */
 .modal-container.mostrar {
   display: flex !important;
   opacity: 1;
@@ -209,19 +229,6 @@ body {
   max-width: 400px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
   text-align: center;
-}
-
-.modal-conteudo h3 {
-  margin-top: 0;
-  color: #111;
-  font-size: 1.3rem;
-}
-
-.modal-conteudo p {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 20px;
-  line-height: 1.4;
 }
 
 #nome-convidado {
@@ -244,24 +251,87 @@ body {
   gap: 12px;
 }
 
-/* RESPONSIVIDADE PARA CELULARES */
-@media (max-width:420px) {
-  .conteudo {
-    width: 92%;
-  } 
-  body { 
-    padding: 20px 10px; 
-  }
-}
-
 .icone-pix, .icone-cartao {
   width: 22px;
   height: 22px;
 }
 
 .texto-pix, .texto-cartao {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: #111;
-  margin-left: 6px; /* espaço entre ícone e texto */
+  margin-left: 6px;
+}
+
+/* RESPONSIVIDADE PARA CELULARES */
+@media (max-width:420px) {
+  .wrapper-produtos { 
+    padding: 20px 12px; 
+  }
+  .titulo-produto {
+    font-size: 15px;
+  }
+}
+
+/* ==========================================
+   ✨ ESTILOS DA TELA DE BOAS-VINDAS 
+   ========================================== */
+.tela-boas-vindas {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    /* 📸 Mude o link abaixo para a sua foto oficial de fundo quando quiser */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url(Nos.jpeg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.conteudo-boas-vindas {
+    color: white;
+    padding: 24px;
+    max-width: 600px;
+    animation: fadeIn 1.2s ease-out;
+}
+
+.conteudo-boas-vindas h1 {
+    font-size: 2.6rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.conteudo-boas-vindas p {
+    font-size: 1.15rem;
+    margin-bottom: 30px;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+.btn-acessar {
+    padding: 16px 36px;
+    font-size: 1.05rem;
+    background-color: #fff;
+    color: #111;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.btn-acessar:hover {
+    background-color: #f3f3f3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
 }
