@@ -11,9 +11,6 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   const URL_FORMSPREE = "https://formspree.io/f/mgoqprpl";
-
-  // 🔗 LINK DO SEU WEBHOOK DO MAKE.COM
-  // Cole entre as aspas o link que você gerou lá no passo anterior
   const URL_WEBHOOK_MAKE = "https://hook.us2.make.com/gox07mdkwq2hsjlegc7666l929evnjnb";
 
   let produtoAtualId = "";
@@ -33,7 +30,6 @@
     }
   }
 
-  // Rodar apenas quando a página estiver totalmente carregada
   window.addEventListener('DOMContentLoaded', () => {
     const listaContainer = document.getElementById('lista-produtos');
     const modal = document.getElementById('modal-nome');
@@ -61,7 +57,6 @@
           mainConteudo.classList.add('item-esgotado');
         }
 
-        // Alterado para um botão único e seguro (sem expor chaves Pix ou links de cartão)
         mainConteudo.innerHTML = `
           <section class="cartao-produto">
             <div class="imagem-produto">
@@ -80,8 +75,8 @@
               <div class="acoes">
                 ${produto.disponivel 
                   ? `<button class="botao primario botao-presentear" 
-                             data-id="${id}" 
-                             data-titulo="${produto.titulo}">
+                               data-id="${id}" 
+                               data-titulo="${produto.titulo}">
                         <span class="texto-presentear">Presentear</span>
                     </button>`
                   : `<button class="botao" disabled style="background-color: #ccc; cursor: not-allowed;">Ganhamos!</button>`
@@ -94,7 +89,6 @@
         listaContainer.appendChild(mainConteudo);
       });
 
-      // EVENTO DO BOTÃO UNIFICADO
       document.querySelectorAll('.botao-presentear').forEach(botao => {
         botao.addEventListener('click', function() {
           produtoAtualId = this.dataset.id;
@@ -113,7 +107,6 @@
       });
     });
 
-    // BOTÕES DO MODAL (CANCELAR)
     const btnCancelar = document.getElementById('btn-cancelar-modal');
     if(btnCancelar) {
       btnCancelar.addEventListener('click', () => {
@@ -122,7 +115,6 @@
       });
     }
 
-    // BOTÕES DO MODAL (CONFIRMAR)
     const btnConfirmar = document.getElementById('btn-confirmar-modal');
     if(btnConfirmar) {
       btnConfirmar.addEventListener('click', async () => {
@@ -138,12 +130,8 @@
       });
     }
 
-    // Função central que delega a segurança para o Make.com
     async function finalizarCompra(nomeConvidado) {
-      alert("Aguarde um momento enquanto preparamos o seu ambiente de pagamento seguro...");
-
       try {
-        // Envia apenas o ID e o Nome. O Make vai checar o preço real no banco.
         const resposta = await fetch(URL_WEBHOOK_MAKE, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -156,12 +144,10 @@
         const resultado = await resposta.json();
 
         if (resultado && resultado.url) {
-          // Dispara a notificação por email
           enviarEmailNotificacao(nomeConvidado, produtoAtualTitulo, resultado.url);
-
-          // Abre a página de pagamento (Pix/Cartão combinados)
-          alert(`Obrigado, ${nomeConvidado}! O presente "${produtoAtualTitulo}" foi reservado. Clique em OK para abrir a tela de pagamento seguro.`);
-          window.open(resultado.url, '_blank', 'noopener,noreferrer');
+          
+          // Redireciona na mesma janela de forma limpa e direta
+          window.location.href = resultado.url;
         } else {
           alert(resultado.erro || "Não foi possível gerar o link de pagamento. Tente novamente.");
         }
