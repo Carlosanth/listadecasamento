@@ -77,9 +77,9 @@
                   ? `<button class="botao primario botao-presentear" 
                                data-id="${id}" 
                                data-titulo="${produto.titulo}">
-                        <span class="texto-presentear">Presentear</span>
+                        <span class="texto-presentear">😊 Presentear 😊</span>
                     </button>`
-                  : `<button class="botao" disabled style="background-color: #ccc; cursor: not-allowed;">Ganhamos!</button>`
+                  : `<button class="botao" disabled style="background-color: #ccc; cursor: not-allowed;">😍 Ganhamos! 😍</button>`
                 }
               </div>
             </div>
