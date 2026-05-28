@@ -12,42 +12,20 @@
   const db = firebase.firestore();
   const URL_FORMSPREE = "https://formspree.io/f/mgoqprpl";
 
+  // 🔗 LINK DO SEU WEBHOOK DO MAKE.COM
+  // Cole entre as aspas o link que você gerou lá no passo anterior
+  const URL_WEBHOOK_MAKE = "COLE_AQUI_O_LINK_DO_SEU_WEBHOOK_DO_MAKE";
+
   let produtoAtualId = "";
   let produtoAtualTitulo = "";
-  let produtoAtualPix = "";
-  let produtoAtualLinkCartao = "";
-  let formaPagamentoAtual = "";
 
-  async function copiarPix(texto) {
-    try {
-      await navigator.clipboard.writeText(texto);
-    } catch(e) {
-      const ta = document.createElement('textarea');
-      ta.value = texto;
-      document.body.appendChild(ta);
-      ta.select();
-      try { document.execCommand('copy'); } catch(_) {}
-      ta.remove();
-    }
-  }
-
-  async function marcarComoIndisponivel(idProduto) {
-    try {
-      await db.collection("produtos").doc(idProduto).update({
-        disponivel: false
-      });
-    } catch (error) {
-      console.error("Erro ao atualizar item: ", error);
-    }
-  }
-
-  async function enviarEmailNotificacao(nomeConvidado, nomeProduto, formaPagamento) {
+  async function enviarEmailNotificacao(nomeConvidado, nomeProduto, linkPagamento) {
     try {
       await fetch(URL_FORMSPREE, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          mensagem: `Olá Carlos! O(a) convidado(a) ${nomeConvidado} escolheu o presente: ${nomeProduto} (Pago via ${formaPagamento.toUpperCase()}) na sua lista de casamento.`
+          mensagem: `Olá Carlos! O(a) convidado(a) ${nomeConvidado} escolheu o presente: ${nomeProduto}. O link de pagamento gerado foi: ${linkPagamento}`
         })
       });
     } catch (error) {
@@ -83,6 +61,7 @@
           mainConteudo.classList.add('item-esgotado');
         }
 
+        // Alterado para um botão único e seguro (sem expor chaves Pix ou links de cartão)
         mainConteudo.innerHTML = `
           <section class="cartao-produto">
             <div class="imagem-produto">
@@ -100,22 +79,11 @@
 
               <div class="acoes">
                 ${produto.disponivel 
-                  ? `<button class="botao primario botao-pix" 
-                              data-id="${id}" 
-                              data-pix="${produto.pix}" 
-                              data-titulo="${produto.titulo}">
-                        <img src="Pix-96.png" 
-                            alt="Pix" class="icone-pix">
-                        <span class="texto-pix">Pix</span>
-                    </button>
-                    <a class="botao botao-cartao" 
-                        href="${produto.linkCartao}" 
-                        data-id="${id}" 
-                        data-titulo="${produto.titulo}">
-                        <img src="Card_128.png" 
-                            alt="Cartão" class="icone-cartao">
-                        <span class="texto-cartao">Cartão</span>
-                    </a>`
+                  ? `<button class="botao primario botao-presentear" 
+                             data-id="${id}" 
+                             data-titulo="${produto.titulo}">
+                        <span class="texto-presentear">Presentear</span>
+                    </button>`
                   : `<button class="botao" disabled style="background-color: #ccc; cursor: not-allowed;">Ganhamos!</button>`
                 }
               </div>
@@ -126,13 +94,11 @@
         listaContainer.appendChild(mainConteudo);
       });
 
-      // EVENTO DO PIX
-      document.querySelectorAll('.botao-pix').forEach(botao => {
+      // EVENTO DO BOTÃO UNIFICADO
+      document.querySelectorAll('.botao-presentear').forEach(botao => {
         botao.addEventListener('click', function() {
           produtoAtualId = this.dataset.id;
           produtoAtualTitulo = this.dataset.titulo;
-          produtoAtualPix = this.dataset.pix;
-          formaPagamentoAtual = "pix";
 
           const m = document.getElementById('modal-nome');
           if(m) {
@@ -140,30 +106,7 @@
             m.classList.add('mostrar');
             if(inputNome) inputNome.focus();
           } else {
-            // Se o CSS ou HTML falharem, o JS usa o prompt do próprio navegador como plano B
-            const nomeBackup = prompt("Digite seu nome completo para reservar o PIX:");
-            if(nomeBackup) finalizarCompra(nomeBackup);
-          }
-        });
-      });
-
-      // EVENTO DO CARTÃO
-      document.querySelectorAll('.botao-cartao').forEach(link => {
-        link.addEventListener('click', function(e) {
-          e.preventDefault(); 
-          
-          produtoAtualId = this.dataset.id;
-          produtoAtualTitulo = this.dataset.titulo;
-          produtoAtualLinkCartao = this.getAttribute('href'); 
-          formaPagamentoAtual = "cartao";
-
-          const m = document.getElementById('modal-nome');
-          if(m) {
-            if(inputNome) inputNome.value = "";
-            m.classList.add('mostrar');
-            if(inputNome) inputNome.focus();
-          } else {
-            const nomeBackup = prompt("Digite seu nome completo para pagar com Cartão:");
+            const nomeBackup = prompt("Digite seu nome completo para confirmar o presente:");
             if(nomeBackup) finalizarCompra(nomeBackup);
           }
         });
@@ -195,17 +138,37 @@
       });
     }
 
-    // Função central para terminar o processo
+    // Função central que delega a segurança para o Make.com
     async function finalizarCompra(nomeConvidado) {
-      enviarEmailNotificacao(nomeConvidado, produtoAtualTitulo, formaPagamentoAtual);
-      await marcarComoIndisponivel(produtoAtualId);
+      alert("Aguarde um momento enquanto preparamos o seu ambiente de pagamento seguro...");
 
-      if (formaPagamentoAtual === "pix") {
-        await copiarPix(produtoAtualPix);
-        alert(`Obrigado, ${nomeConvidado}! O presente "${produtoAtualTitulo}" foi reservado para você. A chave PIX já foi copiada automaticamente, basta colar no aplicativo do seu banco para pagar.`);
-      } else if (formaPagamentoAtual === "cartao") {
-        alert(`Obrigado, ${nomeConvidado}! O presente "${produtoAtualTitulo}" foi reservado. Clique em OK para ser redirecionado à página de pagamento seguro com cartão.`);
-        window.open(produtoAtualLinkCartao, '_blank', 'noopener,noreferrer');
+      try {
+        // Envia apenas o ID e o Nome. O Make vai checar o preço real no banco.
+        const resposta = await fetch(URL_WEBHOOK_MAKE, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            produtoId: produtoAtualId,
+            nomeConvidado: nomeConvidado
+          })
+        });
+
+        const resultado = await resposta.json();
+
+        if (resultado && resultado.url) {
+          // Dispara a notificação por email
+          enviarEmailNotificacao(nomeConvidado, produtoAtualTitulo, resultado.url);
+
+          // Abre a página de pagamento (Pix/Cartão combinados)
+          alert(`Obrigado, ${nomeConvidado}! O presente "${produtoAtualTitulo}" foi reservado. Clique em OK para abrir a tela de pagamento seguro.`);
+          window.open(resultado.url, '_blank', 'noopener,noreferrer');
+        } else {
+          alert(resultado.erro || "Não foi possível gerar o link de pagamento. Tente novamente.");
+        }
+
+      } catch (erro) {
+        console.error("Erro ao falar com o servidor seguro:", erro);
+        alert("Erro de comunicação. O sistema de pagamentos está instável.");
       }
     }
   });
