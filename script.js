@@ -14,7 +14,7 @@
 
   // 🔗 LINK DO SEU WEBHOOK DO MAKE.COM
   // Cole entre as aspas o link que você gerou lá no passo anterior
-  const URL_WEBHOOK_MAKE = "COLE_AQUI_O_LINK_DO_SEU_WEBHOOK_DO_MAKE";
+  const URL_WEBHOOK_MAKE = "https://hook.us2.make.com/gox07mdkwq2hsjlegc7666l929evnjnb";
 
   let produtoAtualId = "";
   let produtoAtualTitulo = "";
