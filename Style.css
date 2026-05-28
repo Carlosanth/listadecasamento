@@ -11,88 +11,74 @@ html, body {
 body {
   font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
   background: #f6f7fb;
-  padding: 0; /* Zerado para a imagem de boas-vindas cobrir tudo */
+  padding: 0; /* Zerado para a imagem de boas-vindas cobrir tudo de ponta a ponta */
   margin: 0;
 }
 
-/* CONTAINER QUE ENVOLVE A LISTA E MANTÉM O ESPAÇAMENTO EXTERNO */
+/* CONTAINER QUE ENVOLVE A LISTA E MANTÉM OS 40PX DE ESPAÇAMENTO ORIGINAL */
 .wrapper-produtos {
   padding: 40px;
 }
 
-/* CONTAINER DOS PRODUTOS (LAYOUT EM DUAS COLUNAS NO CELULAR) */
+/* CONTAINER DOS PRODUTOS (ALINHAMENTO ORIGINAL) */
 #lista-produtos {
-  display: grid;
-  /* Cria colunas automáticas de no mínimo 160px para caberem duas lado a lado no celular */
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
-  gap: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .conteudo {
-  width: 100%; /* Deixa o Grid controlar a largura do cartão */
+  width: 380px; /* Largura original que você aprovou */
 } 
 
-/* CARTÃO DO PRODUTO */
+/* CARTÃO DO PRODUTO ORIGINAL */
 .cartao-produto {
   background: #fff;
   border-radius: 18px;
   box-shadow: 0 14px 30px rgba(0,0,0,0.12);
-  padding: 14px;
+  padding: 18px;
   overflow: hidden;
   transition: all 0.3s ease;
-  height: 100%; /* Deixa todos os cartões com altura alinhada na mesma linha */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 } 
 
-/* CONTAINER DA IMAGEM COM TAMANHO FIXO PADRÃO */
 .imagem-produto {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 8px 6px 14px;
-  height: 180px; /* Altura fixa ideal para o formato de duas colunas */
-  width: 100%;
-  background: #fff;
-  overflow: hidden;
 } 
 
 .imagem-produto img {
   width: 100%;
-  height: 100%;
+  height: auto;
   border-radius: 12px;
-  object-fit: contain; /* Ajusta a foto perfeitamente sem distorcer ou esticar */
+  object-fit: cover;
 } 
 
 .titulo-produto {
   text-align: center;
-  margin: 8px 0;
-  height: auto;
-  font-size: 1rem;
+  margin: 1px 0 0;
+  height: 30px;
+  font-size: 1.05rem;
   font-weight: 700;
   color: #111;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limita o título em até 2 linhas para manter o padrão */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 } 
 
-/* RODAPÉ DO CARTÃO (EMPILHADO EM COLUNAS PARA SE ADAPTAR A TELAS MENORES) */
+/* RODAPÉ DO CARTÃO (ORGANIZADO COM BOTÕES UM ABAIXO DO OUTRO) */
 .rodape-produto {
   display: flex;
-  flex-direction: column; 
-  gap: 10px;
-  margin-top: auto; /* Garante que o rodapé fique sempre colado na base */
+  flex-direction: column; /* Alinha o preço e o bloco de ações verticalmente */
+  gap: 12px;
+  margin-top: 10px;
 } 
 
 .caixa-preco {
-  padding: 10px 12px;
+  padding: 12px 14px;
   border-radius: 10px;
-  width: 100%;
+  width: 100%; /* Ocupa o tamanho total para acompanhar a nova estrutura */
   position: relative;
   border: 3px solid transparent;
   background-origin: border-box;
@@ -103,35 +89,33 @@ body {
 } 
 
 .rotulo-preco {
-  font-size: 13px;
+  font-size: 14px;
   color: #333;
   font-weight: 600;
 } 
 
 .preco {
   margin-top: 4px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   color: #111;
 } 
 
 /* STATUS DE DISPONIBILIDADE */
 .disponibilidade.disponivel {
-  margin-top: 4px;
+  margin-top: 6px;
   color: #615701;
-  font-weight: 900;
-  font-size: 14px;
+  font-weight: 1000;
   font-variant-emoji: emoji;
 } 
 
 .disponibilidade.indisponivel {
-  margin-top: 4px;
+  margin-top: 6px;
   color: #d93025;
   font-weight: 700;
-  font-size: 14px;
 }
 
-/* ESTILO PARA ITEM ESGOTADO */
+/* ESTILO PARA QUANDO O ITEM FOR COMPRADO */
 .item-esgotado .cartao-produto {
   background: #fcfcfc;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -141,12 +125,12 @@ body {
   filter: grayscale(1) opacity(0.6);
 }
 
-/* BOTÕES E AÇÕES */
+/* BOTÕES E AÇÕES (UM ABAIXO DO OUTRO) */
 .acoes {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
+  flex-direction: column; /* Mantém os botões empilhados perfeitamente */
+  gap: 10px;
+  width: 100%; /* Ajustado de 130px para 100% para ocupar toda a largura do cartão */
 } 
 
 .botao {
@@ -164,7 +148,6 @@ body {
   text-decoration: none;
   transition: background 0.2s, transform 0.1s;
   box-shadow: #55555536 0px 1px 15px;
-  font-size: 14px;
 } 
 
 .botao.primario {
@@ -178,7 +161,7 @@ body {
   transform: translateY(1px);
 } 
 
-/* TOAST (MENSAGENS FLUTUANTES) */
+/* MENSAGENS FLUTUANTES (TOAST) */
 .toast {
   position: fixed;
   bottom: 20px;
@@ -198,7 +181,7 @@ body {
   transform: translateX(-50%) translateY(0);
 }
 
-/* MODAL (JANELA FLUTUANTE) */
+/* ESTILOS DA JANELINHA MODAL (PEDIR NOME) */
 .modal-container {
   position: fixed;
   top: 0;
@@ -251,26 +234,26 @@ body {
   gap: 12px;
 }
 
+/* RESPONSIVIDADE PARA CELULARES ORIGINAL */
+@media (max-width:420px) {
+  .conteudo {
+    width: 92%; /* Volta a ocupar quase toda a tela em uma coluna só */
+  } 
+  .wrapper-produtos { 
+    padding: 20px 10px; 
+  }
+}
+
 .icone-pix, .icone-cartao {
   width: 22px;
   height: 22px;
 }
 
 .texto-pix, .texto-cartao {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: #111;
   margin-left: 6px;
-}
-
-/* RESPONSIVIDADE PARA CELULARES */
-@media (max-width:420px) {
-  .wrapper-produtos { 
-    padding: 20px 12px; 
-  }
-  .titulo-produto {
-    font-size: 15px;
-  }
 }
 
 /* ==========================================
@@ -280,8 +263,8 @@ body {
     position: relative;
     width: 100%;
     height: 100vh;
-    /* 📸 Mude o link abaixo para a sua foto oficial de fundo quando quiser */
-    background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url(Nos.jpeg);
+    /* 📸 Configurado com a sua imagem local conforme solicitado */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('Nos.jpeg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
