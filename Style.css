@@ -29,25 +29,7 @@ body {
   gap: 20px;
   align-items: center;
   justify-content: center;
-  width: 100%;
-
-
-
-  
-}
-
-@keyframes cardsurgindo {
-  from {
-    opacity: 0;
-    scale: .5;
-  }
-}
-
-@keyframes cardsaindo {
-  to {
-    opacity: 0%;
-    transform: translateY(-10px); /* Move para cima ao sair, ou +900px para continuar descendo */
-  }
+  width: 100%; 
 }
 
 .conteudo {
@@ -67,6 +49,21 @@ body {
   animation-timeline: view();
   animation-range: entry 0% cover 30%, exit 5% exit 100%;
 } 
+
+@keyframes cardsurgindo {
+  from {
+    opacity: 0;
+    scale: .5;
+  }
+}
+
+@keyframes cardsaindo {
+  to {
+    opacity: 0%;
+    transform: translateY(-10px); /* Move para cima ao sair, ou +900px para continuar descendo */
+    scale: 0.95;
+  }
+}
 
 .imagem-produto {
   display: flex;
