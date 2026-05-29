@@ -60,7 +60,7 @@ body {
 
   animation: cardsurgindo 2s ease;
   animation-timeline: view();
-  animation-range: entry 0% cover 25%;
+  animation-range: entry 0% cover 30%;
 } 
 
 .imagem-produto {
