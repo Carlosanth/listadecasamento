@@ -41,8 +41,13 @@ body {
     opacity: 0;
     scale: .5;
   }
+}
 
- 
+@keyframes cardsaindo {
+  to {
+    opacity: 0%;
+    transform: translateY(-10px); /* Move para cima ao sair, ou +900px para continuar descendo */
+  }
 }
 
 .conteudo {
@@ -58,9 +63,9 @@ body {
   overflow: hidden;
   transition: all 0.3s ease;
 
-  animation: cardsurgindo 2s ease;
+  animation: cardsurgindo 2s ease, cardsaindo 2s ease;
   animation-timeline: view();
-  animation-range: entry 0% cover 30%;
+  animation-range: entry 0% cover 30%, exit 5% exit 100%;
 } 
 
 .imagem-produto {
