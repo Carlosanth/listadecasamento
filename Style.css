@@ -54,15 +54,15 @@ body {
 @keyframes animação-entrada {
   from {
     opacity: 0%;
-    transform: translateY(500px); /* Começa um pouco abaixo e sobe para a posição final */
-    scale: 0.95; /* Começa um pouco menor para dar a sensação de entrada */
+    transform: translateY(50px); /* Começa um pouco abaixo e sobe para a posição final */
+    scale: 0.90; /* Começa um pouco menor para dar a sensação de entrada */
   }
 
 } 
 
 @keyframes animação-saida {
   to {
-    opacity: 0%;
+    opacity: 50%;
     scale: 0.95; /* Encolhe um pouco para dar a sensação de saída */
   }
 }
