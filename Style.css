@@ -47,14 +47,14 @@ body {
 
   animation: animação-entrada 0.6s ease, animação-saida 0.6s ease;
   animation-timeline: view();
-  animation-range: entry 20% cover 50%, exit 60% exit 100%;
+  animation-range: entry 0% cover 50%, exit 60% exit 100%;
 
 } 
 
 @keyframes animação-entrada {
   from {
     opacity: 0%;
-    transform: translateY(50px); /* Começa um pouco abaixo e sobe para a posição final */
+    transform: translateY(30px); /* Começa um pouco abaixo e sobe para a posição final */
     scale: 0.90; /* Começa um pouco menor para dar a sensação de entrada */
   }
 
