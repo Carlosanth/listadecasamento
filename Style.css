@@ -45,23 +45,25 @@ body {
   overflow: hidden;
   transition: all 0.3s ease;
 
-  animation: cardsurgindo 2s ease, cardsaindo 2s ease;
+  animation: animação-entrada 0.6s ease, animação-saida 0.6s ease;
   animation-timeline: view();
-  animation-range: entry 0% cover 30%, exit 5% exit 100%;
+  animation-range: entry 0% cover 50%, exit 5% exit 100%;
+
 } 
 
-@keyframes cardsurgindo {
+@keyframes animação-entrada {
   from {
-    opacity: 0;
-    scale: .5;
+    opacity: 0%;
+    transform: translateY(500px); /* Começa um pouco abaixo e sobe para a posição final */
+    scale: 0.95; /* Começa um pouco menor para dar a sensação de entrada */
   }
-}
 
-@keyframes cardsaindo {
+} 
+
+@keyframes animação-saida {
   to {
     opacity: 0%;
-    transform: translateY(-10px); /* Move para cima ao sair, ou +900px para continuar descendo */
-    scale: 0.95;
+    scale: 0.95; /* Encolhe um pouco para dar a sensação de saída */
   }
 }
 
