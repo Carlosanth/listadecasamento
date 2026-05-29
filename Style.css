@@ -30,6 +30,19 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
+
+
+
+  
+}
+
+@keyframes cardsurgindo {
+  from {
+    opacity: 0;
+    scale: .5;
+  }
+
+ 
 }
 
 .conteudo {
@@ -44,6 +57,10 @@ body {
   padding: 18px;
   overflow: hidden;
   transition: all 0.3s ease;
+
+  animation: cardsurgindo 2s ease;
+  animation-timeline: view();
+  animation-range: entry 0% cover 50%;
 } 
 
 .imagem-produto {
