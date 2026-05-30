@@ -47,7 +47,7 @@ body {
 
   animation: animação-entrada 0.6s ease, animação-saida 0.6s ease;
   animation-timeline: view();
-  animation-range: entry 0% cover 30%, exit 60% exit 100%;
+  animation-range: entry 0% cover 35%, exit 60% exit 100%;
 
 } 
 
@@ -55,7 +55,7 @@ body {
   from {
     opacity: 30%;
     transform: translateY(20px); /* Começa um pouco abaixo e sobe para a posição final */
-    scale: 0.95; /* Começa um pouco menor para dar a sensação de entrada */
+    scale: 0.85; /* Começa um pouco menor para dar a sensação de entrada */
   }
 
 } 
@@ -63,7 +63,7 @@ body {
 @keyframes animação-saida {
   to {
     opacity: 50%;
-    scale: 0.95; /* Encolhe um pouco para dar a sensação de saída */
+    scale: 0.85; /* Encolhe um pouco para dar a sensação de saída */
   }
 }
 
