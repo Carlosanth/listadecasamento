@@ -16,19 +16,13 @@
   let produtoAtualId = "";
   let produtoAtualTitulo = "";
 
-  // =========================================================================
-  // MODIFICAÇÃO 1: Captura o ID do usuário/noivo direto da URL (?id=...)
-  // =========================================================================
-  const urlParams = new URLSearchParams(window.location.search);
-  const idNoivo = urlParams.get('id');
-
   async function enviarEmailNotificacao(nomeConvidado, nomeProduto, linkPagamento) {
     try {
       await fetch(URL_FORMSPREE, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          mensagem: `Olá! O(a) convidado(a) ${nomeConvidado} escolheu o presente: ${nomeProduto}. O link de pagamento gerado foi: ${linkPagamento}`
+          mensagem: `Olá Carlos! O(a) convidado(a) ${nomeConvidado} escolheu o presente: ${nomeProduto}. O link de pagamento gerado foi: ${linkPagamento}`
         })
       });
     } catch (error) {
@@ -46,28 +40,8 @@
       return;
     }
 
-    // =========================================================================
-    // MODIFICAÇÃO 2 e 3: Define onde buscar e aplica o filtro do usuário
-    // =========================================================================
-    let consultaBanco;
-
-    if (idNoivo) {
-      // Se tiver ID na URL, busca na tabela multiusuário filtrando pelo dono do link
-      consultaBanco = db.collection("produtos_teste").where("usuario_id", "==", idNoivo);
-    } else {
-      // Se NÃO tiver ID na URL (caso acesse o link antigo puro), puxa sua lista original
-      // Isso garante que o seu site ATUAL continue funcionando de forma idêntica!
-      consultaBanco = db.collection("produtos");
-    }
-
-    // O leitor em tempo real passa a escutar a consulta inteligente configurada acima
-    consultaBanco.onSnapshot((snapshot) => {
+    db.collection("produtos").onSnapshot((snapshot) => {
       listaContainer.innerHTML = "";
-
-      if (snapshot.empty) {
-        listaContainer.innerHTML = "<p style='text-align:center; grid-column: 1/-1; color:#888;'>Nenhum produto cadastrado para esta lista.</p>";
-        return;
-      }
 
       snapshot.forEach((doc) => {
         const produto = doc.data();
@@ -86,7 +60,7 @@
         mainConteudo.innerHTML = `
           <section class="cartao-produto">
             <div class="imagem-produto">
-              <img src="${produto.imagem || 'https://via.placeholder.com/150'}" alt="${produto.titulo}" />
+              <img src="${produto.imagem}" alt="${produto.titulo}" />
             </div>
 
             <div class="titulo-produto">${produto.titulo}</div>
@@ -163,8 +137,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             produtoId: produtoAtualId,
-            nomeConvidado: nomeConvidado,
-            colecao: idNoivo ? "produtos_teste" : "produtos" // Envia para o Make saber qual tabela atualizar
+            nomeConvidado: nomeConvidado
           })
         });
 
@@ -172,6 +145,8 @@
 
         if (resultado && resultado.url) {
           enviarEmailNotificacao(nomeConvidado, produtoAtualTitulo, resultado.url);
+          
+          // Redireciona na mesma janela de forma limpa e direta
           window.location.href = resultado.url;
         } else {
           alert(resultado.erro || "Não foi possível gerar o link de pagamento. Tente novamente.");
