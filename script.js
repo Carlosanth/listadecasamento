@@ -63,24 +63,26 @@
               <img src="${produto.imagem}" alt="${produto.titulo}" />
             </div>
 
-            <div class="titulo-produto">${produto.titulo}</div>
+            <div class="detalhes-produto">
+              <div class="titulo-produto">${produto.titulo}</div>
 
-            <div class="rodape-produto">
-              <div class="caixa-preco">
-                <div class="rotulo-preco">Valor:</div>
-                <div class="preco">${produto.preco}</div>
-                <div class="disponibilidade ${classeDisponibilidade}">${textoDisponibilidade}</div>
-              </div>
+              <div class="rodape-produto">
+                <div class="caixa-preco">
+                  <div class="rotulo-preco">Valor:</div>
+                  <div class="preco">${produto.preco}</div>
+                  <div class="disponibilidade ${classeDisponibilidade}">${textoDisponibilidade}</div>
+                </div>
 
-              <div class="acoes">
-                ${produto.disponivel 
-                  ? `<button class="botao primario botao-presentear" 
-                               data-id="${id}" 
-                               data-titulo="${produto.titulo}">
+                <div class="acoes">
+                  ${produto.disponivel 
+                    ? `<button class="botao primario botao-presentear" 
+                                 data-id="${id}" 
+                                 data-titulo="${produto.titulo}">
                         <span class="texto-presentear">😊 Presentear 😊</span>
-                    </button>`
-                  : `<button class="botao" disabled style="background-color: #ccc; cursor: not-allowed;">😍 Ganhamos! 😍</button>`
-                }
+                      </button>`
+                    : `<button class="botao" disabled style="background-color: #ccc; cursor: not-allowed;">😍 Ganhamos! 😍</button>`
+                  }
+                </div>
               </div>
             </div>
           </section>
@@ -88,6 +90,18 @@
 
         listaContainer.appendChild(mainConteudo);
       });
+
+      // ==========================================
+      // LÓGICA PARA ALTERNAR A VISUALIZAÇÃO
+      // ==========================================
+      const btnAlternar = document.getElementById('btn-alternar-layout');
+      const listaProdutos = document.getElementById('lista-produtos');
+
+      if (btnAlternar && listaProdutos) {
+        btnAlternar.addEventListener('click', () => {
+          listaProdutos.classList.toggle('visualizacao-vertical');
+        });
+      }
 
       document.querySelectorAll('.botao-presentear').forEach(botao => {
         botao.addEventListener('click', function() {
@@ -145,8 +159,6 @@
 
         if (resultado && resultado.url) {
           enviarEmailNotificacao(nomeConvidado, produtoAtualTitulo, resultado.url);
-          
-          // Redireciona na mesma janela de forma limpa e direta
           window.location.href = resultado.url;
         } else {
           alert(resultado.erro || "Não foi possível gerar o link de pagamento. Tente novamente.");

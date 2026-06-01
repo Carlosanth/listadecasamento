@@ -10,11 +10,39 @@ html, body {
 
 body {
   font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  /* 📌 AQUI FOI ALTERADO: Fundo com tom cremoso e textura sutil de papel de convite */
   background-color: #fcfbf8; 
   background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png"); 
-  padding: 0; /* Zerado para a imagem de boas-vindas cobrir tudo de ponta a ponta */
+  padding: 0; 
   margin: 0;
+}
+
+/* ESTILO DO BOTÃO DE ALTERNAR VISUALIZAÇÃO */
+.controle-layout {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.btn-layout {
+  background-color: #fff;
+  border: 1px solid #e2e6ef;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-layout:hover {
+  background-color: #f5f5e8;
+  transform: translateY(-1px);
 }
 
 /* CONTAINER QUE ENVOLVE A LISTA E MANTÉM OS 40PX DE ESPAÇAMENTO ORIGINAL */
@@ -29,49 +57,62 @@ body {
   gap: 20px;
   align-items: center;
   justify-content: center;
-  width: 100%; 
+  width: 100%;
 }
 
 .conteudo {
-  width: 380px; /* Largura original */
+  width: 480px; 
+  transition: width 0.3s ease;
 } 
 
-/* CARTÃO DO PRODUTO ORIGINAL */
+/* Se a classe vertical estiver ativa, a largura do container volta ao padrão antigo */
+#lista-produtos.visualizacao-vertical .conteudo {
+  width: 380px;
+}
+
+/* CARTÃO DO PRODUTO (PADRÃO DEITADO) */
 .cartao-produto {
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 14px 30px rgba(0,0,0,0.12);
+  background: #fff; 
+  border-radius: 12px; 
+  box-shadow: 0 14px 30px rgba(0,0,0,0.12); 
   padding: 18px;
   overflow: hidden;
   transition: all 0.3s ease;
 
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 18px 24px; 
+
   animation: animação-entrada 0.6s ease, animação-saida 0.6s ease;
   animation-timeline: view();
   animation-range: entry 0% cover 35%, exit 60% exit 100%;
-
 } 
 
 @keyframes animação-entrada {
   from {
     opacity: 30%;
-    transform: translateY(20px); /* Começa um pouco abaixo e sobe para a posição final */
-    scale: 0.85; /* Começa um pouco menor para dar a sensação de entrada */
+    transform: translateY(20px); 
+    scale: 0.85; 
   }
-
 } 
 
 @keyframes animação-saida {
   to {
     opacity: 50%;
-    scale: 0.85; /* Encolhe um pouco para dar a sensação de saída */
+    scale: 0.85; 
   }
 }
 
+/* LADO ESQUERDO: IMAGEM (PADRÃO DEITADO) */
 .imagem-produto {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 6px 14px;
+  padding: 0; 
+  max-width: 45%; 
 } 
 
 .imagem-produto img {
@@ -81,66 +122,96 @@ body {
   object-fit: cover;
 } 
 
+/* LADO DIREITO: CONTAINER DO CONTEÚDO (PADRÃO DEITADO) */
+.detalhes-produto {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
 .titulo-produto {
-  text-align: center;
-  margin: 1px 0 10px;
-  height: auto;       /* Deixado em auto para não cortar o texto maior */
-  font-size: 1.3rem;  /* Tamanho maior para o nome do presente */
+  text-align: center; /* Alinhado à esquerda no modo deitado */
+  margin: 0 0 4px 0;
+  height: auto;      
+  font-size: 1.2rem;  
   font-weight: 700;
   color: #111;
 } 
 
-/* RODAPÉ DO CARTÃO (ORGANIZADO COM BOTÕES UM ABAIXO DO OUTRO) */
+/* ==========================================================
+   🔄 REGRA MÁGICA: QUANDO A VISUALIZAÇÃO VERTICAL FOR ATIVADA
+   ========================================================== */
+#lista-produtos.visualizacao-vertical .cartao-produto {
+  flex-direction: column; /* Coloca um embaixo do outro */
+  padding: 18px;
+  text-align: center;
+}
+
+#lista-produtos.visualizacao-vertical .imagem-produto {
+  max-width: 100%; /* Imagem passa a usar o tamanho total da largura */
+  width: 100%;
+  padding: 8px 6px 14px;
+}
+
+#lista-produtos.visualizacao-vertical .titulo-produto {
+  text-align: center; /* Título centraliza no modo em pé */
+  margin: 1px 0 10px;
+}
+
+/* RODAPÉ DO CARTÃO */
 .rodape-produto {
   display: flex;
-  flex-direction: column; /* Alinha o preço e o bloco de ações verticalmente */
-  gap: 12px;
-  margin-top: 10px;
+  flex-direction: column; 
+  gap: 10px;
+  margin-top: 0;
 } 
 
 .caixa-preco {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 12px 14px;
+  padding: 10px 12px;
   border-radius: 10px;
   width: 100%; 
   position: relative;
   border: 3px solid transparent;
   background-origin: border-box;
   background-clip: padding-box, border-box;
-  background-image: url('Estilo para cartao de valor.png');
+  background-image: url('Estilo para cartao de valor.png'); 
   background-size: 200% 900%;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); 
 } 
 
 .rotulo-preco {
-  font-size: 14px;
+  font-size: 13px;
   color: #333;
   font-weight: 600;
 } 
 
 .preco {
-  margin-top: 4px;
-  font-size: 18px;
+  margin-top: 2px;
+  font-size: 17px;
   font-weight: 700;
   color: #111;
 } 
 
 /* STATUS DE DISPONIBILIDADE */
 .disponibilidade.disponivel {
-  margin-top: 6px;
+  margin-top: 4px;
   color: #615701;
   font-weight: 1000;
-  font-size: 16px;
+  font-size: 15px;
   font-variant-emoji: emoji;
 } 
 
 .disponibilidade.indisponivel {
-  margin-top: 6px;
+  margin-top: 4px;
   color: #d93025;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 /* ESTILO PARA QUANDO O ITEM FOR COMPRADO */
@@ -153,10 +224,10 @@ body {
   filter: grayscale(1) opacity(0.6);
 }
 
-/* BOTÕES E AÇÕES (UM ABAIXO DO OUTRO) */
+/* BOTÕES E AÇÕES */
 .acoes {
   display: flex;
-  flex-direction: column; /* Mantém os botões empilhados perfeitamente */
+  flex-direction: column; 
   gap: 10px;
   width: 100%; 
 } 
@@ -168,7 +239,7 @@ body {
   width: 100%;
   background: #fdf79950;
   border: 1px solid #e2e6ef;
-  padding: 12px 14px;
+  padding: 10px 14px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 700;
@@ -176,7 +247,7 @@ body {
   text-decoration: none;
   transition: background 0.2s, transform 0.1s;
   box-shadow: #55555536 0px 1px 15px;
-  font-size: 18px; /* Texto maior para o botão/Ganhamos */
+  font-size: 16px; 
 } 
 
 .botao.primario {
@@ -263,48 +334,50 @@ body {
   gap: 12px;
 }
 
-/* RESPONSIVIDADE PARA CELULARES (FORÇANDO AS MUDANÇAS COM !IMPORTANT) */
-@media (max-width:420px) {
+/* RESPONSIVIDADE PARA CELULARES */
+@media (max-width:450px) {
   .conteudo {
-    width: 92%; /* Volta a ocupar quase toda a tela em uma coluna só */
+    width: 100% !important; 
   } 
   .wrapper-produtos { 
-    padding: 20px 10px; 
+    padding: 8px 40px; 
+  }
+  .cartao-produto {
+    flex-direction: row !important; /* Mantém deitado por padrão se couber */
+    gap: 12px;
+    padding: 12px;
   }
   
-  /* Garante o botão grande e nítido no celular */
-  .botao {
-    font-size: 18px !important; 
-    padding: 12px !important;
+  /* Se o usuário forçar o modo vertical no celular, respeita */
+  #lista-produtos.visualizacao-vertical .cartao-produto {
+    flex-direction: column !important;
   }
   
-  /* Garante o título grande e nítido no celular */
+  .imagem-produto {
+    max-width: 40%;
+  }
+  #lista-produtos.visualizacao-vertical .imagem-produto {
+    max-width: 100%;
+  }
   .titulo-produto {
-    font-size: 1.3rem !important;
-    height: auto !important;
+    font-size: 16px !important;
   }
-}
-
-.icone-pix, .icone-cartao {
-  width: 22px;
-  height: 22px;
-}
-
-.texto-pix, .texto-cartao {
-  font-size: 16px;
-  font-weight: 700;
-  color: #111;
-  margin-left: 6px;
+  .botao {
+    font-size: 14px !important; 
+    padding: 8px 2px !important;
+  }
+  .preco {
+    font-size: 15px;
+  }
 }
 
 /* ==========================================
-   ✨ ESTILOS DA TELA DE BOAS-VINDAS 
+   ✨ ESTILOS DA TELA DE BOAS-VINDAS PRESERVADOS
    ========================================== */
 .tela-boas-vindas {
     position: relative;
     width: 100%;
     height: 100vh;
-    /* Imagem local mantida */
     background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('Nos.jpeg');
     background-size: cover;
     background-position: center;
