@@ -16,10 +16,13 @@ body {
   margin: 0;
 }
 
-/* ESTILO DO BOTÃO DE ALTERNAR VISUALIZAÇÃO */
+/* ==========================================================
+   ⚙️ PAINEL DE CONTROLE (BOTÕES DE LAYOUT)
+   ========================================================== */
 .controle-layout {
   display: flex;
   justify-content: center;
+  gap: 12px;
   margin-top: 20px;
   margin-bottom: 20px;
 }
@@ -48,18 +51,16 @@ body {
 /* ==========================================================
    📌 PADDING DINÂMICO DO WRAPPER (DEITADO VS EM PÉ)
    ========================================================== */
-/* Padrão (Quando o layout está DEITADO) */
 .wrapper-produtos {
   padding: 8px 11px; 
-  transition: padding 0.3s ease; /* Transição suave ao alternar */
+  transition: padding 0.3s ease;
 }
 
-/* Quando o layout muda para EM PÉ (visualizacao-vertical ativa) */
 .wrapper-produtos:has(#lista-produtos.visualizacao-vertical) {
   padding: 8px 50px;
 }
 
-/* CONTAINER DOS PRODUTOS (ALINHAMENTO ORIGINAL) */
+/* CONTAINER DOS PRODUTOS */
 #lista-produtos {
   display: flex;
   flex-wrap: wrap;
@@ -67,16 +68,16 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
+  transition: gap 0.3s ease;
 }
 
 .conteudo {
   width: 480px; 
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, max-width 0.3s ease;
 } 
 
-/* Se a classe vertical estiver ativa, a largura do container volta ao padrão antigo */
 #lista-produtos.visualizacao-vertical .conteudo {
-  width: 380px;
+  width: 320px;
 }
 
 /* CARTÃO DO PRODUTO (PADRÃO DEITADO) */
@@ -84,37 +85,35 @@ body {
   background: #fff; 
   border-radius: 12px; 
   box-shadow: 0 14px 30px rgba(0,0,0,0.12); 
-  padding: 18px;
   overflow: hidden;
   transition: all 0.3s ease;
-
   display: flex;
   align-items: center;
   gap: 16px;
   width: 100%;
   padding: 18px 24px; 
 
-  animation: animação-entrada 0.6s ease, animação-saida 0.6s ease;
+  animation: animacao-entrada 0.6s ease, animacao-saida 0.6s ease;
   animation-timeline: view();
   animation-range: entry 0% cover 35%, exit 60% exit 100%;
 } 
 
-@keyframes animação-entrada {
+@keyframes animacao-entrada {
   from {
-    opacity: 30%;
+    opacity: 0.3;
     transform: translateY(20px); 
     scale: 0.85; 
   }
 } 
 
-@keyframes animação-saida {
+@keyframes animacao-saida {
   to {
-    opacity: 50%;
+    opacity: 0.5;
     scale: 0.85; 
   }
 }
 
-/* LADO ESQUERDO: IMAGEM (PADRÃO DEITADO) */
+/* LADO ESQUERDO: IMAGEM */
 .imagem-produto {
   flex: 1;
   display: flex;
@@ -131,7 +130,7 @@ body {
   object-fit: cover;
 } 
 
-/* LADO DIREITO: CONTAINER DO CONTEÚDO (PADRÃO DEITADO) */
+/* LADO DIREITO: CONTEÚDO */
 .detalhes-produto {
   flex: 1.2;
   display: flex;
@@ -153,6 +152,10 @@ body {
 /* ==========================================================
    🔄 REGRA MÁGICA: QUANDO A VISUALIZAÇÃO VERTICAL FOR ATIVADA
    ========================================================== */
+#lista-produtos.visualizacao-vertical {
+  gap: 15px; /* Reduzido para os cartões ficarem bem próximos */
+}
+
 #lista-produtos.visualizacao-vertical .cartao-produto {
   flex-direction: column; 
   padding: 18px;
@@ -213,7 +216,6 @@ body {
   color: #615701;
   font-weight: 1000;
   font-size: 15px;
-  font-variant-emoji: emoji;
 } 
 
 .disponibilidade.indisponivel {
@@ -223,7 +225,7 @@ body {
   font-size: 15px;
 }
 
-/* ESTILO PARA QUANDO O ITEM FOR COMPRADO */
+/* ITEM COMPRADO */
 .item-esgotado .cartao-produto {
   background: #fcfcfc;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -233,7 +235,7 @@ body {
   filter: grayscale(1) opacity(0.6);
 }
 
-/* BOTÕES E AÇÕES */
+/* BOTÕES */
 .acoes {
   display: flex;
   flex-direction: column; 
@@ -246,7 +248,7 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  background: #fdf79950;
+  background: rgba(253, 247, 153, 0.31);
   border: 1px solid #e2e6ef;
   padding: 10px 14px;
   border-radius: 8px;
@@ -255,12 +257,12 @@ body {
   color: #222;
   text-decoration: none;
   transition: background 0.2s, transform 0.1s;
-  box-shadow: #55555536 0px 1px 15px;
+  box-shadow: rgba(85, 85, 85, 0.21) 0px 1px 15px;
   font-size: 16px; 
 } 
 
 .botao.primario {
-  background: #fdf79950;
+  background: rgba(253, 247, 153, 0.31);
   font-weight: 700;
   border-color: #f5f5e8;
   color: #222;
@@ -270,7 +272,7 @@ body {
   transform: translateY(1px);
 } 
 
-/* MENSAGENS FLUTUANTES (TOAST) */
+/* TOAST */
 .toast {
   position: fixed;
   bottom: 20px;
@@ -290,7 +292,7 @@ body {
   transform: translateX(-50%) translateY(0);
 }
 
-/* ESTILOS DA JANELINHA MODAL (PEDIR NOME) */
+/* MODAL */
 .modal-container {
   position: fixed;
   top: 0;
@@ -343,18 +345,24 @@ body {
   gap: 12px;
 }
 
-/* RESPONSIVIDADE PARA CELULARES */
+/* RESPONSIVIDADE */
 @media (max-width:450px) {
   .conteudo {
-    width: 100% !important; 
+    width: 100%; 
+    max-width: 100%;
   } 
   
-  /* Mantém a lógica proporcional de padding no Mobile também */
+  #lista-produtos.visualizacao-vertical .conteudo {
+    max-width: 85% !important;
+    margin: 0 auto;
+  }
+
   .wrapper-produtos { 
     padding: 8px 11px !important; 
   }
+  
   .wrapper-produtos:has(#lista-produtos.visualizacao-vertical) {
-    padding: 8px 30px !important; /* Um pouco menor em telas pequenas para não esmagar o card */
+    padding: 8px 30px !important; 
   }
 
   .cartao-produto {
@@ -385,9 +393,7 @@ body {
   }
 }
 
-/* ==========================================
-   ✨ ESTILOS DA TELA DE BOAS-VINDAS PRESERVADOS
-   ========================================== */
+/* TELA DE BOAS-VINDAS */
 .tela-boas-vindas {
     position: relative;
     width: 100%;
