@@ -45,9 +45,18 @@ body {
   transform: translateY(-1px);
 }
 
-/* CONTAINER QUE ENVOLVE A LISTA E MANTÉM OS 40PX DE ESPAÇAMENTO ORIGINAL */
+/* ==========================================================
+   📌 PADDING DINÂMICO DO WRAPPER (DEITADO VS EM PÉ)
+   ========================================================== */
+/* Padrão (Quando o layout está DEITADO) */
 .wrapper-produtos {
-  padding: 40px;
+  padding: 8px 11px; 
+  transition: padding 0.3s ease; /* Transição suave ao alternar */
+}
+
+/* Quando o layout muda para EM PÉ (visualizacao-vertical ativa) */
+.wrapper-produtos:has(#lista-produtos.visualizacao-vertical) {
+  padding: 8px 50px;
 }
 
 /* CONTAINER DOS PRODUTOS (ALINHAMENTO ORIGINAL) */
@@ -133,7 +142,7 @@ body {
 }
 
 .titulo-produto {
-  text-align: center; /* Alinhado à esquerda no modo deitado */
+  text-align: center; 
   margin: 0 0 4px 0;
   height: auto;      
   font-size: 1.2rem;  
@@ -145,19 +154,19 @@ body {
    🔄 REGRA MÁGICA: QUANDO A VISUALIZAÇÃO VERTICAL FOR ATIVADA
    ========================================================== */
 #lista-produtos.visualizacao-vertical .cartao-produto {
-  flex-direction: column; /* Coloca um embaixo do outro */
+  flex-direction: column; 
   padding: 18px;
   text-align: center;
 }
 
 #lista-produtos.visualizacao-vertical .imagem-produto {
-  max-width: 100%; /* Imagem passa a usar o tamanho total da largura */
+  max-width: 100%; 
   width: 100%;
   padding: 8px 6px 14px;
 }
 
 #lista-produtos.visualizacao-vertical .titulo-produto {
-  text-align: center; /* Título centraliza no modo em pé */
+  text-align: center; 
   margin: 1px 0 10px;
 }
 
@@ -339,16 +348,21 @@ body {
   .conteudo {
     width: 100% !important; 
   } 
+  
+  /* Mantém a lógica proporcional de padding no Mobile também */
   .wrapper-produtos { 
-    padding: 8px 40px; 
+    padding: 8px 11px !important; 
   }
+  .wrapper-produtos:has(#lista-produtos.visualizacao-vertical) {
+    padding: 8px 30px !important; /* Um pouco menor em telas pequenas para não esmagar o card */
+  }
+
   .cartao-produto {
-    flex-direction: row !important; /* Mantém deitado por padrão se couber */
+    flex-direction: row !important; 
     gap: 12px;
     padding: 12px;
   }
   
-  /* Se o usuário forçar o modo vertical no celular, respeita */
   #lista-produtos.visualizacao-vertical .cartao-produto {
     flex-direction: column !important;
   }
@@ -364,7 +378,7 @@ body {
   }
   .botao {
     font-size: 14px !important; 
-    padding: 8px 2px !important;
+    padding: 12px 2px !important;
   }
   .preco {
     font-size: 15px;
