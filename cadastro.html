@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Cadastro - Lista de Casamento</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
+        .container { max-width: 500px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin: auto; }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input[type="text"], input[type="file"], select { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        button { width: 100%; padding: 12px; background-color: #e91e63; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        button:hover { background-color: #c2185b; }
+        #mensagem { margin-top: 15px; text-align: center; font-weight: bold; font-size: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Cadastrar Item (Coleção: produtos)</h2>
+    <form id="cadastroForm">
+        
+        <div class="form-group">
+            <label for="docId">ID do Documento:</label>
+            <input type="text" id="docId" required placeholder="Ex: 1Coz_c_Centrifuga">
+        </div>
+
+        <div class="form-group">
+            <label for="titulo">Título do Produto:</label>
+            <input type="text" id="titulo" required placeholder="Ex: Centrífuga de Vegetais">
+        </div>
+
+        <div class="form-group">
+            <label for="preco">Preço:</label>
+            <input type="text" id="preco" required placeholder="R$ 0,00">
+        </div>
+
+        <div class="form-group">
+            <label for="preco_centavos">Preço em Centavos (Automático):</label>
+            <input type="text" id="preco_centavos" required placeholder="Preenchido automaticamente" readonly style="background-color: #e9ecef; cursor: not-allowed;">
+        </div>
+        
+        <div class="form-group">
+            <label for="imagemFile">Selecione a Imagem do Produto:</label>
+            <input type="file" id="imagemFile" accept="image/*" required>
+        </div>
+
+        <div class="form-group">
+            <label for="disponivel">Disponível:</label>
+            <select id="disponivel">
+                <option value="true">Sim (true)</option>
+                <option value="false" selected>Não (false)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="chaveAcesso">Chave de Acesso (Segurança):</label>
+            <input type="text" id="chaveAcesso" required placeholder="Digite a senha das regras do Firestore">
+        </div>
+
+        <button type="submit">Salvar no Firebase e ImgBB</button>
+    </form>
+    <div id="mensagem"></div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyD-VWgC9Z8R9IgjlnYRNmGxG8YrEFTlzMM", 
+        authDomain: "lista-casamento-8c482.firebaseapp.com",
+        projectId: "lista-casamento-8c482",
+        storageBucket: "lista-casamento-8c482.firebasestorage.app", 
+        messagingSenderId: "873428866016",
+        appId: "1:873428866016:web:985b96d66a18ff399ed185"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // COLOQUE SUA CHAVE DO IMGBB AQUI DENTRO DAS ASPAS
+    const IMGBB_API_KEY = "e797ef41a3250b8611e3621390e0f89c"; 
+
+    const precoInput = document.getElementById('preco');
+    const centavosInput = document.getElementById('preco_centavos');
+
+    // Máscara de preço em tempo real
+    precoInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, "");
+        if (value === "") {
+            precoInput.value = "";
+            centavosInput.value = "";
+            return;
+        }
+        centavosInput.value = value;
+        let resultado = (Number(value) / 100).toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        });
+        precoInput.value = resultado;
+    });
+
+    document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msgDiv = document.getElementById('mensagem');
+        msgDiv.style.color = "black";
+        msgDiv.innerText = "Fazendo upload da imagem para o ImgBB...";
+
+        const docId = document.getElementById('docId').value.trim();
+        const titulo = document.getElementById('titulo').value.trim();
+        const precoFinal = precoInput.value.trim();
+        const preco_centavos = centavosInput.value.trim();
+        const imagemFileInput = document.getElementById('imagemFile');
+        const disponivel = document.getElementById('disponivel').value === "true";
+        const chaveAcesso = document.getElementById('chaveAcesso').value.trim();
+
+        // Verifica se selecionou o arquivo
+        if (imagemFileInput.files.length === 0) {
+            msgDiv.style.color = "red";
+            msgDiv.innerText = "Por favor, selecione uma imagem.";
+            return;
+        }
+
+        try {
+            // 1. FAZ O UPLOAD PARA O IMGBB PRIMEIRO
+            const arquivoImagem = imagemFileInput.files[0];
+            const formData = new FormData();
+            formData.append("image", arquivoImagem);
+
+            const imgbbResposta = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                method: "POST",
+                body: formData
+            });
+
+            const imgbbDados = await imgbbResposta.json();
+
+            if (!imgbbDados.success) {
+                throw new Error("Falha ao subir imagem para o ImgBB. Verifique sua chave de API.");
+            }
+
+            // Pegamos o link direto que o ImgBB gerou (termina com .png, .jpg etc.)
+            const linkDaImagem = imgbbDados.data.url;
+
+            msgDiv.innerText = "Imagem salva! Gravando dados no Firebase...";
+
+            // 2. SALVA NO FIRESTORE COM O LINK GERADO
+            const docRef = doc(db, "produtos", docId);
+
+            const dadosProduto = {
+                titulo: titulo,
+                preco: precoFinal, 
+                preco_centavos: preco_centavos, 
+                imagem: linkDaImagem, // Salvando o link real da internet gerado automaticamente!
+                disponivel: disponivel,
+                chave_acesso: chaveAcesso 
+            };
+
+            await setDoc(docRef, dadosProduto);
+
+            msgDiv.style.color = "green";
+            msgDiv.innerText = "Sucesso! Imagem hospedada e item cadastrado no Firebase.";
+            
+            // Reseta todo o formulário para o próximo item
+            document.getElementById('cadastroForm').reset();
+            
+        } catch (error) {
+            console.error("Erro completo:", error);
+            msgDiv.style.color = "red";
+            msgDiv.innerText = "Erro no processo. Verifique as configurações ou a chave de acesso.";
+        }
+    });
+</script>
+
+</body>
+</html>
