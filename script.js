@@ -11,7 +11,7 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   const URL_FORMSPREE = "https://formspree.io/f/mgoqprpl";
-  const URL_WEBHOOK_MAKE = "https://hook.us2.make.com/lemodebk82adq56qmbylr77wx2qc4et2";
+  const URL_WEBHOOK_MAKE = "https://hook.us2.make.com/gox07mdkwq2hsjlegc7666l929evnjnb";
 
   let produtoAtualId = "";
   let produtoAtualTitulo = "";
